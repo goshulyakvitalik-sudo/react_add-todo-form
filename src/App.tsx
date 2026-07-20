@@ -1,9 +1,10 @@
 import { useState } from 'react';
+
 import './App.scss';
 
-import { TodoList } from './components/TodoList';
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
+import { TodoList } from './components/TodoList';
 import type { Todo } from './types/Todo';
 
 export const App = () => {
@@ -20,11 +21,13 @@ export const App = () => {
     event.preventDefault();
 
     const trimmedTitle = title.trim();
+    const hasTitleError = trimmedTitle === '';
+    const hasUserError = userId === 0;
 
-    setTitleError(!trimmedTitle);
-    setUserError(userId === 0);
+    setTitleError(hasTitleError);
+    setUserError(hasUserError);
 
-    if (!trimmedTitle || userId === 0) {
+    if (hasTitleError || hasUserError) {
       return;
     }
 
@@ -46,7 +49,6 @@ export const App = () => {
       title: trimmedTitle,
       userId,
       completed: false,
-      user: selectedUser,
     };
 
     setTodos(currentTodos => [
@@ -66,9 +68,15 @@ export const App = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="field">
+          <label htmlFor="todo-title">
+            Todo title
+          </label>
+
           <input
+            id="todo-title"
             type="text"
             data-cy="titleInput"
+            placeholder="Enter a title"
             value={title}
             onChange={event => {
               setTitle(event.target.value);
@@ -87,7 +95,12 @@ export const App = () => {
         </div>
 
         <div className="field">
+          <label htmlFor="todo-user">
+            User
+          </label>
+
           <select
+            id="todo-user"
             data-cy="userSelect"
             value={userId}
             onChange={event => {
@@ -103,7 +116,10 @@ export const App = () => {
             </option>
 
             {usersFromServer.map(user => (
-              <option key={user.id} value={user.id}>
+              <option
+                key={user.id}
+                value={user.id}
+              >
                 {user.name}
               </option>
             ))}
@@ -116,7 +132,10 @@ export const App = () => {
           )}
         </div>
 
-        <button type="submit" data-cy="submitButton">
+        <button
+          type="submit"
+          data-cy="submitButton"
+        >
           Add
         </button>
       </form>
