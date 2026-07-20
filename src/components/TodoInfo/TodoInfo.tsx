@@ -13,6 +13,7 @@ export const TodoInfo = ({ todo }: Props) => {
 
   return (
     <article
+      data-id={todo.id}
       className={
         todo.completed
           ? 'TodoInfo TodoInfo--completed'
